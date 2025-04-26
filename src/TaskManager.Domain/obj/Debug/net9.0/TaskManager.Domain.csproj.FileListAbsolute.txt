@@ -1,0 +1,11 @@
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\bin\Debug\net9.0\TaskManager.Domain.deps.json
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\bin\Debug\net9.0\TaskManager.Domain.dll
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\bin\Debug\net9.0\TaskManager.Domain.pdb
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.AssemblyInfoInputs.cache
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.AssemblyInfo.cs
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.csproj.CoreCompileInputs.cache
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.dll
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\refint\TaskManager.Domain.dll
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.pdb
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\ref\TaskManager.Domain.dll

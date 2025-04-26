@@ -1,0 +1,54 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-task
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "task123@"
+    restart: always
+
+  migrator:
+    build:
+      context: ./src
+      dockerfile: TaskManager.Migrator/DockerFile
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings__DataBase=Server=sqlserver,1433;Database=TaskManagerDb;User=sa;Password=task123@;Encrypt=True;TrustServerCertificate=True
+    command: >
+      /bin/sh -c "
+        while ! nc -z sqlserver 1433; do sleep 1; done;
+        dotnet TaskManager.Migrator.dll
+      "
+    restart: on-failure
+
+  backend:
+    build:
+      context: ./src
+      dockerfile: TaskManager.API/DockerFile
+    container_name: backend
+    depends_on:
+      - sqlserver
+      - migrator
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DataBase=Server=sqlserver,1433;Database=TaskManagerDb;User=sa;Password=task123@;Encrypt=True;TrustServerCertificate=True
+    command: ["dotnet", "TaskManager.API.dll"]
+    restart: always
+
+  frontend:
+    build:
+      context: ./app
+      dockerfile: DockerFile
+      args:
+        - VITE_API_URL=http://backend:80/api/tasks
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
