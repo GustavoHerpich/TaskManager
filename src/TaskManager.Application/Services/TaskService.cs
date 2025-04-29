@@ -18,32 +18,32 @@ public class TaskService(
 {
    public async Task<Result<TaskItemDto>> CreateAsync(CreateTaskDto dto)
     {
-        _logger.CreateTaskAttempt(dto.Description);
+        _logger.CreateTaskAttempt(dto.Title, dto.Description);
         
         var validation = await _createValidator.ValidateAsync(dto);
         var result = validation.ToResult();
         if (result.IsFailed)
         {
-            _logger.TaskCreationFailed(dto.Description);
+            _logger.TaskCreationFailed(dto.Title, dto.Description);
             return result;
         }
 
-        var task = new TaskItem(dto.Description);
+        var task = new TaskItem(dto.Title, dto.Description);
         await _repository.AddAsync(task);
 
-        _logger.TaskCreated(task.Id);
+        _logger.TaskCreated(task.Title, task.Id);
         return Result.Ok(ToDto(task));
     }
 
     public async Task<Result<TaskItemDto>> UpdateAsync(Guid id, UpdateTaskDto dto)
     {
-        _logger.UpdateTaskAttempt(id);
+        _logger.UpdateTaskAttempt(id, dto.Title);
 
         var validation = await _updateValidator.ValidateAsync(dto);
         var result = validation.ToResult();
         if (result.IsFailed)
         {
-            _logger.TaskUpdateFailed(id);
+            _logger.TaskUpdateFailed(id, dto.Title);
             return result;
         }
 
@@ -55,12 +55,20 @@ public class TaskService(
         }
 
         task.Description = dto.Description;
+        task.Title = dto.Title;
+
         if (dto.MarkAsCompleted && !task.IsCompleted)
+        {
             task.MarkAsCompleted();
+        }
+        else if (!dto.MarkAsCompleted && task.IsCompleted)
+        {
+            task.MarkAsActive(); 
+        }
 
         await _repository.UpdateAsync(task);
 
-        _logger.TaskUpdated(task.Id);
+        _logger.TaskUpdated(task.Id, task.Title);
         return Result.Ok(ToDto(task));
     }
 
@@ -92,7 +100,7 @@ public class TaskService(
             return Result.Fail(new NotFoundError("Tarefa não encontrada."));
         }
 
-        _logger.TaskFetched(id); 
+        _logger.TaskFetched(id, task.Title); 
         return Result.Ok(ToDto(task));
     }
 
@@ -114,6 +122,7 @@ public class TaskService(
     private static TaskItemDto ToDto(TaskItem task) => new()
     {
         Id = task.Id,
+        Title = task.Title,
         Description = task.Description,
         CreatedAt = task.CreatedAt,
         CompletedAt = task.CompletedAt

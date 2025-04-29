@@ -1,50 +1,82 @@
 <template>
   <v-card
-    class="hoverable"
+    class="hoverable mb-4"
     @mouseover="hover = true"
     @mouseleave="hover = false"
     :class="{ 'hovered-card': hover }"
   >
+    <v-card-title class="text-subtitle-1 font-weight-bold">
+      {{ task.title }}
+    </v-card-title>
+
     <v-card-text>
-        <v-text-field
-          class="mb-4"
-          v-model="editedDescription"
-          :readonly="!isEditing || isTaskCompleted"
-          density="compact"
-          hide-details
-          variant="solo"
-          @click.stop="startEditing"
-          @blur="saveEdit"
-        />
-      <p></p>
-      <p>Criada em: {{ formatDate(task.createdAt) }}</p>
-      <p v-if="!isTaskCompleted">Tempo ativo: {{ elapsedTime }}</p>
-      <p v-else>Concluída em: {{ formatDate(task.completedAt || '') }}</p>
+      <v-textarea
+        v-model="editedDescription"
+        :readonly="!isEditing || isTaskCompleted"
+        density="compact"
+        hide-details
+        variant="solo"
+        rows="2"
+        auto-grow
+        @click.stop="startEditing"
+        @blur="saveEdit"
+        class="mb-3"
+      />
+      <p class="text-caption">Criada em: {{ formatDate(task.createdAt) }}</p>
+      <p class="text-caption" v-if="!isTaskCompleted">Tempo ativo: {{ elapsedTime }}</p>
+      <p class="text-caption" v-else>Concluída em: {{ formatDate(task.completedAt || '') }}</p>
     </v-card-text>
-    <v-card-actions>
-      <v-btn @click="markAsDone" :disabled="isTaskCompleted" color="success">Concluir</v-btn>
-      <v-btn @click="remove" color="error">Excluir</v-btn>
+
+      <v-card-actions class="justify-end">
+        <v-btn
+          v-if="!isTaskCompleted"
+          icon
+          color="success"
+          @click="markTaskAsDone"
+          :disabled="!isFormValid"
+        >
+          <v-icon>mdi-check</v-icon>
+        </v-btn>
+
+        <v-btn
+          v-else
+          icon
+          color="warning"
+          @click="markTaskAsActive"
+          :disabled="!isFormValid"
+        >
+          <v-icon>mdi-undo</v-icon> 
+        </v-btn>
+
+        <v-btn 
+          icon color="error" 
+          @click="removeTask"
+          >
+            <v-icon>mdi-delete</v-icon>
+        </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, computed  } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch} from 'vue';
 import type { Task } from '@/types/task';
 import { taskService } from '@/services/taskService';
 import { parseErrorMessage } from '@/utils/parseError';
+import { useAlertStore } from '@/store/modules/alertModule';
 
+const alertStore = useAlertStore();
 const props = defineProps<{ task: Task }>();
-const emit = defineEmits(['updated', 'error']);
-
-const elapsedTime = ref('');
+const emit = defineEmits(['updated', 'error', 'warning']);
 const hover = ref(false);
 const isEditing = ref(false);
+const isFormValid = ref(false);
 const editedDescription = ref(props.task.description);
+const elapsedTime = ref('');
 
-const isTaskCompleted = computed(() => !!props.task.completedAt && props.task.completedAt !== "");
+const isTaskCompleted = computed(() => !!props.task.completedAt);
 
-let interval: number;
+let intervalId: number;
 
 function updateElapsedTime() {
   const createdUtc = new Date(props.task.createdAt); 
@@ -62,41 +94,78 @@ function updateElapsedTime() {
   elapsedTime.value = `${hours}h ${minutes}m ${seconds}s`;
 }
 
-onMounted(() => {
-  if (!isTaskCompleted.value) {
-    updateElapsedTime();
-    interval = setInterval(updateElapsedTime, 1000);
-  }
-});
+const markTaskAsDone = async () => {
+  if (isTaskCompleted.value) return;
 
-onUnmounted(() => {
-  clearInterval(interval);
-});
-
-const markAsDone = async () => {
-  if (!isTaskCompleted.value) {
-    try {
-      await taskService.update(props.task.id, props.task.description, true);
-      emit('updated');
-    } catch (error: any) {
-      emit('error', parseErrorMessage(error, 'Erro ao concluir tarefa.'));
+  try {
+    await taskService.update(props.task.id, props.task.title, props.task.description, true);
+    emit('updated');
+    alertStore.showAlert('Tarefa conluída com sucesso!', 'info');
+  } catch (error: any) {
+    const result = parseErrorMessage(error, 'Erro ao criar tarefa.');
+    if (result.handled)
+    {
+      emit('warning', result.message)
+      return
     }
+    emit('error', result.message);
   }
 };
 
-const remove = async () => {
+const markTaskAsActive = async () => {
+  if (!isTaskCompleted.value) return;
+
+  try {
+    await taskService.update(props.task.id, props.task.title, props.task.description, false);
+    emit('updated');
+    alertStore.showAlert('Tarefa reativada com sucesso!', 'info');
+  } catch (error: any) {
+    const result = parseErrorMessage(error, 'Erro ao reativar tarefa.');
+    if (result.handled) {
+      emit('warning', result.message);
+      return;
+    }
+    emit('error', result.message);
+  }
+};
+
+const removeTask = async () => {
   try {
     await taskService.delete(props.task.id);
     emit('updated');
+    alertStore.showAlert('Tarefa removida com sucesso!', 'info');
   } catch (error: any) {
-    emit('error', parseErrorMessage(error, 'Erro ao excluir tarefa.'));
+    const result = parseErrorMessage(error, 'Erro ao criar tarefa.');
+    if (result.handled)
+    {
+      emit('warning', result.message)
+      return
+    }
+    emit('error', result.message);
   }
 };
 
-function formatDate(dateStr: string) {
-  const date = new Date(dateStr);
-  return date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-}
+const saveEdit = async () => {
+  if (!isEditing.value || editedDescription.value.trim() === props.task.description) {
+    isEditing.value = false;
+    return;
+  }
+
+  try {
+    await taskService.update(props.task.id, props.task.title, editedDescription.value, isTaskCompleted.value);
+    emit('updated');
+    alertStore.showAlert('Tarefa atualizada com sucesso!', 'info');
+  } catch (error: any) {
+    const result = parseErrorMessage(error, 'Erro ao criar tarefa.');
+    if (result.handled)
+    {
+      emit('warning', result.message)
+      return
+    }
+    emit('error', result.message);
+  }
+  isEditing.value = false;
+};
 
 const startEditing = () => {
   if (!isTaskCompleted.value) {
@@ -104,17 +173,26 @@ const startEditing = () => {
   }
 };
 
-const saveEdit = async () => {
-  if (editedDescription.value.trim() && editedDescription.value !== props.task.description) {
-    try {
-      await taskService.update(props.task.id, editedDescription.value, isTaskCompleted.value);
-      emit('updated');
-    } catch (error: any) {
-      emit('error', parseErrorMessage(error, 'Erro inesperado ao editar tarefa.'));
-    }
-  }
-  isEditing.value = false;
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 };
+
+onMounted(() => {
+  if (!isTaskCompleted.value) {
+    updateElapsedTime();
+    intervalId = setInterval(updateElapsedTime, 1000);
+  }
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
+
+watch(editedDescription, (newVal) => {
+  isFormValid.value = newVal.trim().length >= 3;
+}, { immediate: true });
+
 </script>
 
 <style scoped>
@@ -123,8 +201,5 @@ const saveEdit = async () => {
 }
 .hovered-card {
   background-color: #e3f2fd;
-}
-.mb-4 {
-  margin-bottom: 16px;
 }
 </style>

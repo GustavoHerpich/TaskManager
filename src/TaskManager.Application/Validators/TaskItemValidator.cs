@@ -10,6 +10,9 @@ public class CreateTaskValidator : AbstractValidator<CreateTaskDto>
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A descrição é obrigatória.")
             .MinimumLength(3).WithMessage("A descrição deve ter pelo menos 3 caracteres.");
+
+        RuleFor(x => x.Title)
+            .NotEmpty().WithMessage("O titulo é obrigatório.");
     }
 }
 public class UpdateTaskValidator : AbstractValidator<UpdateTaskDto>
@@ -19,5 +22,8 @@ public class UpdateTaskValidator : AbstractValidator<UpdateTaskDto>
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("A descrição é obrigatória.")
             .MinimumLength(3).WithMessage("A descrição deve ter pelo menos 3 caracteres.");
+
+        RuleFor(x => x.Title)
+            .NotEmpty().WithMessage("O titulo é obrigatório.");
     }
 }

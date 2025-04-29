@@ -1164,6 +1164,7 @@
         "dependencies": {
           "FluentResults": "3.16.0",
           "FluentValidation": "11.11.0",
+          "Microsoft.Extensions.Logging": "9.0.4",
           "TaskManager.Domain": "1.0.0"
         },
         "runtime": {

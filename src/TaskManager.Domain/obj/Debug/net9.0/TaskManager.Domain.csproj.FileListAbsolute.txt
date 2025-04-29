@@ -9,3 +9,4 @@ C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\Task
 C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\refint\TaskManager.Domain.dll
 C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.pdb
 C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\ref\TaskManager.Domain.dll
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.sourcelink.json

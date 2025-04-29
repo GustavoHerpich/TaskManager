@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TaskManager.Migrator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60d8811f4487be6845736334f917e33606fbafa2")]
 [assembly: System.Reflection.AssemblyProductAttribute("TaskManager.Migrator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TaskManager.Migrator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

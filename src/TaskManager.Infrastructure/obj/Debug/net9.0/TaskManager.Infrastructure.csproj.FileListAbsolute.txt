@@ -13,3 +13,4 @@ C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\Task
 C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Infrastructure\obj\Debug\net9.0\refint\TaskManager.Infrastructure.dll
 C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Infrastructure\obj\Debug\net9.0\TaskManager.Infrastructure.pdb
 C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Infrastructure\obj\Debug\net9.0\ref\TaskManager.Infrastructure.dll
+C:\Users\gusta\OneDrive\Área de Trabalho\Projeto_MagnaData\TaskManager\src\TaskManager.Infrastructure\obj\Debug\net9.0\TaskManager.Infrastructure.sourcelink.json

@@ -15,6 +15,10 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.Property(c => c.Id)
             .IsRequired();
 
+        builder.Property(c => c.Title)
+            .IsRequired()
+            .HasMaxLength(500);
+
         builder.Property(c => c.Description)
             .IsRequired()
             .HasMaxLength(500);

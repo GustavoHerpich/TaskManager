@@ -1,21 +1,10 @@
 <template>
   <v-app>
-    <v-main>
-      <v-container class="pa-4">
-        <router-view />
-      </v-container>
-    </v-main>
+    <router-view />
+    <GlobalSnackbar /> 
   </v-app>
 </template>
 
 <script setup lang="ts">
+import GlobalSnackbar from '@/components/GlobalSnackbar.vue';
 </script>
-
-<style>
-body {
-  margin: 0;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  background-color: #f5f5f5;
-}
-</style>
-  

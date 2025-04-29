@@ -11,8 +11,8 @@ export const useTaskStore = defineStore('task', () => {
     tasks.value = response.data;
   }
 
-  async function createTask(description: string) {
-    const response = await taskService.create(description);
+  async function createTask(title: string, description: string) {
+    const response = await taskService.create(title, description);
     tasks.value.unshift(response.data); 
   }
 
