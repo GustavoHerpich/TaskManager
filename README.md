@@ -25,7 +25,7 @@ No projeto do back-end (`TaskManager.API`), adicione suas configurações sensí
 ```bash
 cd src/TaskManager.API
 dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings__DataBase=Server=sqlserver,1433;Database=TaskManagerDb;User=sa;Password=task123@;Encrypt=True;TrustServerCertificate=True"
+dotnet user-secrets set "ConnectionStrings__DataBase" "Server=sqlserver,1433;Database=TaskManagerDb;User=sa;Password=task123@;Encrypt=True;TrustServerCertificate=True"
 ```
 
 ## Subir com Docker
